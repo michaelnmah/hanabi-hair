@@ -27,6 +27,7 @@
   --line-light: rgba(255, 250, 248, 0.2);
   --font-display: "Parfumerie Script Text", "Cormorant Garamond", Georgia, serif;
   --font-script: "Parfumerie Script Regular", "Burgues Script", "Allura", cursive;
+  --font-product: "Cormorant SC", "Cormorant Garamond", Georgia, serif;
   --font-body: "Manrope", "Helvetica Neue", sans-serif;
   --page-gutter: clamp(1.25rem, 4vw, 5rem);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -661,11 +662,11 @@ footer .eyebrow {
 }
 
 .product-meta h3 {
-  font-family: var(--font-script);
-  font-size: clamp(2.2rem, 3vw, 3.2rem);
-  font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: 0;
+  font-family: var(--font-product);
+  font-size: clamp(1.9rem, 2.5vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.015em;
 }
 
 .product-meta > span {
