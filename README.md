@@ -44,7 +44,7 @@ Never expose the service-role key to Vercel or any `VITE_` variable.
 Create a Stripe webhook endpoint pointing to:
 
 ```text
-https://YOUR-RENDER-SERVICE.onrender.com/api/webhooks/stripe
+https://hanami-hair-api.onrender.com/api/webhooks/stripe
 ```
 
 Listen for `checkout.session.completed`, then set these private Render
@@ -67,7 +67,7 @@ Import the repository and keep the repository root as the project root.
 Set:
 
 ```text
-VITE_API_URL=https://YOUR-RENDER-SERVICE.onrender.com
+VITE_API_URL=https://hanami-hair-api.onrender.com
 ```
 
 ## Render
@@ -78,9 +78,15 @@ workspace, starts the Express service, and checks `/health`.
 Set:
 
 ```text
-CLIENT_URL=https://YOUR-VERCEL-DOMAIN.vercel.app
-ALLOWED_ORIGINS=https://YOUR-VERCEL-DOMAIN.vercel.app
+CLIENT_URL=https://hanabi-hair.vercel.app
+ALLOWED_ORIGINS=https://hanabi-hair.vercel.app
 ```
+
+## Production
+
+- Storefront: https://hanabi-hair.vercel.app
+- API: https://hanami-hair-api.onrender.com
+- Health check: https://hanami-hair-api.onrender.com/health
 
 ## Brand assets
 

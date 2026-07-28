@@ -12,15 +12,14 @@ services:
       - key: NODE_VERSION
         value: 22
       - key: CLIENT_URL
-        sync: false
+        value: https://hanabi-hair.vercel.app
       - key: ALLOWED_ORIGINS
-        sync: false
+        value: https://hanabi-hair.vercel.app
       - key: SUPABASE_URL
-        sync: false
+        value: https://zmvkhjifsjdmsqkczsab.supabase.co
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
-
