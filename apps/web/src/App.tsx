@@ -381,7 +381,12 @@ function App() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Hanami Hair</span>
-          <a href="#top" aria-label="Hanami Hair on Instagram">
+          <a
+            href="https://www.instagram.com/hanamihair/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Hanami Hair on Instagram"
+          >
             <Instagram size={18} /> Instagram
           </a>
         </div>
