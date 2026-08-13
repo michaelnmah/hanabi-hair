@@ -36,8 +36,7 @@ backgrounds where contrast remains accessible.
 
 ### Typography
 
-- **Script Display:** Parfumerie Script Text (Cormorant Garamond fallback)
-- **Editorial Headings:** Cormorant SC Medium
+- **Heading Font:** Parfumerie Script Text (Cormorant Garamond fallback)
 - **Script Accent:** Parfumerie Script Regular (Burgues Script / Allura fallback)
 - **Product Names:** Cormorant SC Medium
 - **Body Font:** Manrope

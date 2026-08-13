@@ -323,11 +323,9 @@ footer .eyebrow {
   display: block;
   margin-top: 0.45em;
   color: var(--blush);
-  font-family: var(--font-product);
   font-size: 0.48em;
-  font-style: normal;
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  font-style: italic;
+  letter-spacing: 0;
 }
 
 .hero-intro {
@@ -515,19 +513,14 @@ footer .eyebrow {
   background: var(--paper);
 }
 
+.manifesto h2,
+.section-heading h2,
 .editorial-copy h2,
 .care-copy h2,
 .newsletter h2 {
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: 0;
-}
-
-.manifesto h2,
-.section-heading h2 {
-  font-family: var(--font-product);
-  font-weight: 500;
-  letter-spacing: 0.02em;
 }
 
 .manifesto h2 {
@@ -540,10 +533,6 @@ footer .eyebrow {
 .editorial-copy h2 em {
   color: var(--mauve);
   font-weight: 400;
-}
-
-.manifesto h2 em {
-  font-style: normal;
 }
 
 .manifesto-copy {
@@ -1510,7 +1499,7 @@ footer {
   }
 
   .section-heading h2 {
-    font-size: clamp(3.75rem, 17vw, 4.25rem);
+    font-size: 4.75rem;
   }
 
   .product-grid {
