@@ -27,7 +27,6 @@
   --line-light: rgba(255, 250, 248, 0.2);
   --font-display: "Parfumerie Script Text", "Cormorant Garamond", Georgia, serif;
   --font-script: "Parfumerie Script Regular", "Burgues Script", "Allura", cursive;
-  --font-product: "Cormorant SC", "Cormorant Garamond", Georgia, serif;
   --font-body: "Manrope", "Helvetica Neue", sans-serif;
   --page-gutter: clamp(1.25rem, 4vw, 5rem);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -323,11 +322,9 @@ footer .eyebrow {
   display: block;
   margin-top: 0.45em;
   color: var(--blush);
-  font-family: var(--font-product);
-  font-size: 0.38em;
-  font-style: normal;
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  font-size: 0.48em;
+  font-style: italic;
+  letter-spacing: 0;
 }
 
 .hero-intro {
@@ -515,6 +512,8 @@ footer .eyebrow {
   background: var(--paper);
 }
 
+.manifesto h2,
+.section-heading h2,
 .editorial-copy h2,
 .care-copy h2,
 .newsletter h2 {
@@ -523,16 +522,9 @@ footer .eyebrow {
   letter-spacing: 0;
 }
 
-.manifesto h2,
-.section-heading h2 {
-  font-family: var(--font-product);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
 .manifesto h2 {
   max-width: 850px;
-  font-size: clamp(3.5rem, 4.8vw, 5.75rem);
+  font-size: clamp(4.5rem, 7vw, 8rem);
   line-height: 0.98;
 }
 
@@ -540,10 +532,6 @@ footer .eyebrow {
 .editorial-copy h2 em {
   color: var(--mauve);
   font-weight: 400;
-}
-
-.manifesto h2 em {
-  font-style: normal;
 }
 
 .manifesto-copy {
@@ -573,7 +561,7 @@ footer .eyebrow {
 
 .section-heading h2 {
   margin-top: 0.8rem;
-  font-size: clamp(3.25rem, 4.8vw, 5.5rem);
+  font-size: clamp(4.5rem, 7.5vw, 8.5rem);
   line-height: 0.9;
 }
 
@@ -638,7 +626,7 @@ footer .eyebrow {
   border: 0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   font-weight: 600;
   opacity: 0.92;
   transform: translateY(0);
@@ -669,21 +657,21 @@ footer .eyebrow {
   color: var(--mauve);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.64rem;
+  font-size: 0.58rem;
   font-weight: 600;
 }
 
 .product-meta h3 {
-  font-family: var(--font-product);
-  font-size: clamp(1.55rem, 1.8vw, 2rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 2.4vw, 2.6rem);
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
 }
 
 .product-meta > span {
   padding-top: 0.3rem;
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
@@ -692,7 +680,7 @@ footer .eyebrow {
   max-width: 350px;
   margin-top: 0.85rem;
   color: rgba(33, 35, 34, 0.6);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   line-height: 1.7;
 }
 
@@ -769,7 +757,7 @@ footer .eyebrow {
 
 .standards dd {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.11em;
 }
@@ -865,7 +853,7 @@ footer .eyebrow {
   margin-bottom: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
 }
 
 .email-field {
@@ -902,7 +890,7 @@ footer .eyebrow {
   border: 0;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
 }
 
 .email-field button:disabled {
@@ -913,7 +901,7 @@ footer .eyebrow {
 .newsletter form > p {
   margin-top: 0.75rem;
   color: rgba(255, 250, 248, 0.66);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
 }
 
 .subscription-success {
@@ -982,13 +970,13 @@ footer {
   color: var(--blush);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.66rem;
+  font-size: 0.62rem;
 }
 
 .footer-links a {
   width: fit-content;
   color: rgba(255, 250, 248, 0.68);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   transition: color 180ms ease;
 }
 
@@ -1003,7 +991,7 @@ footer {
   justify-content: space-between;
   color: rgba(255, 250, 248, 0.5);
   border-top: 1px solid var(--line-light);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
 }
 
 .footer-bottom a {
@@ -1124,7 +1112,7 @@ footer {
 
 .cart-line h3 {
   margin: 0.4rem 0;
-  font-family: var(--font-product);
+  font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: 500;
 }
@@ -1232,8 +1220,7 @@ footer {
   align-items: center;
   gap: 0.8rem;
   border-bottom: 1px solid rgba(255, 250, 248, 0.24);
-  font-family: var(--font-product);
-  font-weight: 500;
+  font-family: var(--font-display);
   font-size: clamp(1.9rem, 7vw, 3.2rem);
 }
 
@@ -1517,7 +1504,7 @@ footer {
   }
 
   .manifesto h2 {
-    font-size: clamp(3rem, 13vw, 4.25rem);
+    font-size: clamp(4.4rem, 19vw, 5.8rem);
   }
 
   .collection {
@@ -1526,7 +1513,7 @@ footer {
   }
 
   .section-heading h2 {
-    font-size: clamp(2.75rem, 12vw, 3.4rem);
+    font-size: 4.75rem;
   }
 
   .product-grid {
