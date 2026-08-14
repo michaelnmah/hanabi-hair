@@ -596,7 +596,7 @@ footer .eyebrow {
 }
 
 .product-image {
-  height: clamp(350px, 42vw, 570px);
+  height: clamp(320px, 38vw, 520px);
   position: relative;
   overflow: hidden;
   background: var(--taupe);
@@ -1540,7 +1540,7 @@ footer {
   }
 
   .product-image {
-    height: min(105vw, 500px);
+    height: min(96vw, 460px);
   }
 
   .editorial-image {
