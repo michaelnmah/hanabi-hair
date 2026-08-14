@@ -638,17 +638,18 @@ footer .eyebrow {
   border: 0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 0.6rem;
+  font-size: 0.64rem;
   font-weight: 600;
-  transform: translateY(calc(100% + 1rem));
+  opacity: 0.92;
+  transform: translateY(0);
   transition:
-    transform 320ms var(--ease-out),
+    opacity 200ms ease,
     background-color 200ms ease;
 }
 
 .product-card:hover .quick-add,
 .quick-add:focus-visible {
-  transform: translateY(0);
+  opacity: 1;
 }
 
 .quick-add:hover {
@@ -668,7 +669,7 @@ footer .eyebrow {
   color: var(--mauve);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.58rem;
+  font-size: 0.64rem;
   font-weight: 600;
 }
 
@@ -682,7 +683,7 @@ footer .eyebrow {
 
 .product-meta > span {
   padding-top: 0.3rem;
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
@@ -691,7 +692,7 @@ footer .eyebrow {
   max-width: 350px;
   margin-top: 0.85rem;
   color: rgba(33, 35, 34, 0.6);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   line-height: 1.7;
 }
 
@@ -768,7 +769,7 @@ footer .eyebrow {
 
 .standards dd {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.11em;
 }
@@ -855,12 +856,16 @@ footer .eyebrow {
   line-height: 0.95;
 }
 
+.newsletter .eyebrow {
+  color: var(--white);
+}
+
 .newsletter form label {
   display: block;
   margin-bottom: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
 }
 
 .email-field {
@@ -897,13 +902,18 @@ footer .eyebrow {
   border: 0;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 0.64rem;
+  font-size: 0.68rem;
+}
+
+.email-field button:disabled {
+  cursor: wait;
+  opacity: 0.66;
 }
 
 .newsletter form > p {
   margin-top: 0.75rem;
   color: rgba(255, 250, 248, 0.66);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
 }
 
 .subscription-success {
@@ -972,13 +982,13 @@ footer {
   color: var(--blush);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.62rem;
+  font-size: 0.66rem;
 }
 
 .footer-links a {
   width: fit-content;
   color: rgba(255, 250, 248, 0.68);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   transition: color 180ms ease;
 }
 
@@ -993,7 +1003,7 @@ footer {
   justify-content: space-between;
   color: rgba(255, 250, 248, 0.5);
   border-top: 1px solid var(--line-light);
-  font-size: 0.66rem;
+  font-size: 0.72rem;
 }
 
 .footer-bottom a {
@@ -1114,7 +1124,7 @@ footer {
 
 .cart-line h3 {
   margin: 0.4rem 0;
-  font-family: var(--font-display);
+  font-family: var(--font-product);
   font-size: 1.6rem;
   font-weight: 500;
 }
@@ -1222,7 +1232,8 @@ footer {
   align-items: center;
   gap: 0.8rem;
   border-bottom: 1px solid rgba(255, 250, 248, 0.24);
-  font-family: var(--font-display);
+  font-family: var(--font-product);
+  font-weight: 500;
   font-size: clamp(1.9rem, 7vw, 3.2rem);
 }
 
@@ -1270,6 +1281,11 @@ footer {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
+}
+
+.toast.is-error {
+  color: var(--white);
+  background: var(--mauve);
 }
 
 .reveal {
@@ -1345,10 +1361,10 @@ footer {
   }
 
   .hero {
-    min-height: 900px;
+    min-height: 0;
     height: auto;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(580px, 70svh) auto;
+    grid-template-rows: minmax(440px, 56svh) auto;
   }
 
   .hero-image {
@@ -1469,7 +1485,7 @@ footer {
   }
 
   .hero {
-    grid-template-rows: minmax(540px, 68svh) auto;
+    grid-template-rows: minmax(420px, 52svh) auto;
   }
 
   .hero-copy {

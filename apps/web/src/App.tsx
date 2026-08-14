@@ -11,12 +11,14 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { products, type Product } from "./catalog";
 
 type CartLine = Product & { quantity: number };
+type ToastTone = "success" | "error";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8787";
+const CART_STORAGE_KEY = "hanami-cart";
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -24,13 +26,37 @@ const money = new Intl.NumberFormat("en-GB", {
   minimumFractionDigits: 0,
 });
 
+const loadCart = (): CartLine[] => {
+  try {
+    const saved = window.localStorage.getItem(CART_STORAGE_KEY);
+    const parsed = saved ? (JSON.parse(saved) as unknown) : [];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.flatMap((line) => {
+      if (!line || typeof line !== "object") return [];
+      const savedLine = line as { slug?: unknown; quantity?: unknown };
+      const product = products.find((item) => item.slug === savedLine.slug);
+      const quantity = Number(savedLine.quantity);
+      if (!product || !Number.isFinite(quantity) || quantity < 1) return [];
+      return [{ ...product, quantity: Math.min(99, Math.floor(quantity)) }];
+    });
+  } catch {
+    return [];
+  }
+};
+
 function App() {
-  const [cart, setCart] = useState<CartLine[]>([]);
+  const [cart, setCart] = useState<CartLine[]>(loadCart);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [checkoutBusy, setCheckoutBusy] = useState(false);
+  const [subscribeBusy, setSubscribeBusy] = useState(false);
   const [toast, setToast] = useState("");
+  const [toastTone, setToastTone] = useState<ToastTone>("success");
   const [subscribed, setSubscribed] = useState(false);
+  const cartDrawerRef = useRef<HTMLElement>(null);
+  const menuDrawerRef = useRef<HTMLElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = useMemo(
@@ -38,11 +64,25 @@ function App() {
     [cart],
   );
 
+  const showToast = (message: string, tone: ToastTone = "success") => {
+    setToastTone(tone);
+    setToast(message);
+  };
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify(
+        cart.map(({ slug, quantity }) => ({ slug, quantity })),
+      ),
+    );
+  }, [cart]);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("checkout") === "success") {
       setCart([]);
-      setToast("Your order is confirmed. Welcome to the Hanami ritual.");
+      showToast("Your order is confirmed. Welcome to the Hanami ritual.");
       window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
@@ -52,6 +92,65 @@ function App() {
     const timeout = window.setTimeout(() => setToast(""), 4200);
     return () => window.clearTimeout(timeout);
   }, [toast]);
+
+  useEffect(() => {
+    const drawer = cartOpen
+      ? cartDrawerRef.current
+      : menuOpen
+        ? menuDrawerRef.current
+        : null;
+    if (!drawer) return;
+
+    previousFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const frame = window.requestAnimationFrame(() => {
+      drawer.querySelector<HTMLElement>("button, a[href], input")?.focus();
+    });
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setCartOpen(false);
+        setMenuOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(
+        drawer.querySelectorAll<HTMLElement>(
+          'a[href], button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.offsetParent !== null);
+      if (!focusable.length) {
+        event.preventDefault();
+        drawer.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
+    };
+  }, [cartOpen, menuOpen]);
 
   const addToBag = (product: Product) => {
     setCart((current) => {
@@ -65,7 +164,7 @@ function App() {
       }
       return [...current, { ...product, quantity: 1 }];
     });
-    setToast(`${product.name} added to your bag.`);
+    showToast(`${product.name} added to your bag.`);
   };
 
   const updateQuantity = (slug: string, amount: number) => {
@@ -91,16 +190,15 @@ function App() {
           items: cart.map(({ slug, quantity }) => ({ slug, quantity })),
         }),
       });
-      const data = (await response.json()) as { url?: string; error?: string };
+      const data = (await response.json()) as { url?: string };
       if (!response.ok || !data.url) {
-        throw new Error(data.error || "Checkout is not available yet.");
+        throw new Error("Checkout unavailable");
       }
       window.location.assign(data.url);
-    } catch (error) {
-      setToast(
-        error instanceof Error
-          ? error.message
-          : "Checkout is not available yet.",
+    } catch {
+      showToast(
+        "Checkout couldn’t start. Please try again or contact us.",
+        "error",
       );
     } finally {
       setCheckoutBusy(false);
@@ -109,6 +207,7 @@ function App() {
 
   const subscribe = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubscribeBusy(true);
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email") || "");
     try {
@@ -121,8 +220,17 @@ function App() {
       setSubscribed(true);
       event.currentTarget.reset();
     } catch {
-      setToast("We couldn’t save your email. Please try again.");
+      showToast("We couldn’t save your email. Please try again.", "error");
+    } finally {
+      setSubscribeBusy(false);
     }
+  };
+
+  const exploreCollection = () => {
+    setCartOpen(false);
+    window.requestAnimationFrame(() => {
+      document.getElementById("collection")?.scrollIntoView();
+    });
   };
 
   return (
@@ -151,8 +259,11 @@ function App() {
         <div className="header-actions">
           <button
             className="bag-button"
-            onClick={() => setCartOpen(true)}
-            aria-label={`Open shopping bag with ${itemCount} items`}
+            onClick={() => {
+              setMenuOpen(false);
+              setCartOpen(true);
+            }}
+            aria-label={`Open shopping bag with ${itemCount} ${itemCount === 1 ? "item" : "items"}`}
           >
             <ShoppingBag size={19} strokeWidth={1.6} />
             <span>Bag</span>
@@ -160,7 +271,10 @@ function App() {
           </button>
           <button
             className="icon-button menu-button"
-            onClick={() => setMenuOpen(true)}
+            onClick={() => {
+              setCartOpen(false);
+              setMenuOpen(true);
+            }}
             aria-label="Open menu"
           >
             <Menu size={21} strokeWidth={1.6} />
@@ -263,7 +377,7 @@ function App() {
                     <p>{product.eyebrow}</p>
                     <h3>{product.name}</h3>
                   </div>
-                  <span>From {money.format(product.price)}</span>
+                  <span>{money.format(product.price)}</span>
                 </div>
                 <p className="product-description">{product.description}</p>
               </article>
@@ -321,7 +435,7 @@ function App() {
               movement. Your order includes our signature care card.
             </p>
             <a className="text-link dark" href="#newsletter">
-              Read the care guide <ArrowRight size={17} />
+              Join the private list <ArrowRight size={17} />
             </a>
           </div>
         </section>
@@ -347,8 +461,13 @@ function App() {
                   autoComplete="email"
                   required
                 />
-                <button type="submit" aria-label="Join the Hanami mailing list">
-                  Join the list <ArrowRight size={17} />
+                <button
+                  type="submit"
+                  aria-label="Join the Hanami mailing list"
+                  disabled={subscribeBusy}
+                >
+                  {subscribeBusy ? "Joining…" : "Join the list"}
+                  {!subscribeBusy && <ArrowRight size={17} />}
                 </button>
               </div>
               <p>Private launches, hair rituals and quiet luxuries. No noise.</p>
@@ -374,9 +493,11 @@ function App() {
           </div>
           <div>
             <p>Care</p>
-            <a href="#newsletter">Hair guide</a>
+            <a href="#newsletter">Private list</a>
             <a href="mailto:hello@hanamihair.co.uk">Contact</a>
-            <a href="#top">Delivery & returns</a>
+            <a href="mailto:hello@hanamihair.co.uk?subject=Delivery%20question">
+              Delivery questions
+            </a>
           </div>
         </div>
         <div className="footer-bottom">
@@ -402,10 +523,14 @@ function App() {
       />
 
       <aside
+        ref={cartDrawerRef}
         className={`drawer cart-drawer ${cartOpen ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal={cartOpen}
         aria-hidden={!cartOpen}
         aria-label="Shopping bag"
         inert={!cartOpen}
+        tabIndex={-1}
       >
         <div className="drawer-header">
           <div>
@@ -427,7 +552,7 @@ function App() {
               <p>Your bag is waiting for something beautiful.</p>
               <button
                 className="text-link dark"
-                onClick={() => setCartOpen(false)}
+                onClick={exploreCollection}
               >
                 Explore the collection <ArrowRight size={17} />
               </button>
@@ -485,10 +610,14 @@ function App() {
       </aside>
 
       <aside
+        ref={menuDrawerRef}
         className={`drawer menu-drawer ${menuOpen ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal={menuOpen}
         aria-hidden={!menuOpen}
         aria-label="Mobile navigation"
         inert={!menuOpen}
+        tabIndex={-1}
       >
         <button
           className="icon-button menu-close"
@@ -518,8 +647,12 @@ function App() {
         <p className="menu-script">your crown, in bloom</p>
       </aside>
 
-      <div className={`toast ${toast ? "is-visible" : ""}`} role="status">
-        {toast && <Check size={17} />}
+      <div
+        className={`toast ${toast ? "is-visible" : ""} ${toastTone === "error" ? "is-error" : ""}`}
+        role={toastTone === "error" ? "alert" : "status"}
+      >
+        {toast &&
+          (toastTone === "error" ? <X size={17} /> : <Check size={17} />)}
         <span>{toast}</span>
       </div>
     </>
